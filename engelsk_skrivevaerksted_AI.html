@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Writing Workshop — Behind the Mirror</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #e91e8c;
+    --rose-light: #f48cb6;
+    --rose-pale: #fce4f0;
+    --rose-soft: #fdf0f7;
+    --pink-bg: #fff5fb;
+    --text: #2d1a24;
+    --text-soft: #7a4d63;
+    --green: #2e7d32;
+    --green-light: #e8f5e9;
+    --red: #c62828;
+    --red-light: #ffebee;
+    --gold: #f9a825;
+    --blue: #1565c0;
+    --blue-light: #e3f2fd;
+    --radius: 14px;
+    --shadow: 0 4px 20px rgba(233,30,140,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--pink-bg);
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  header {
+    background: linear-gradient(135deg, #e91e8c 0%, #c2185b 100%);
+    color: white;
+    padding: 24px 20px 20px;
+    text-align: center;
+  }
+  header h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+  header p { font-size: 1rem; opacity: 0.9; margin-top: 4px; font-family: 'Lora', serif; font-style: italic; }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    background: white;
+    border-bottom: 3px solid var(--rose-pale);
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 80px;
+    padding: 14px 8px;
+    border: none;
+    background: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+  }
+  .tab-btn.active {
+    color: var(--rose);
+    border-bottom-color: var(--rose);
+    background: var(--rose-soft);
+  }
+
+  /* PANELS */
+  .panel { display: none; padding: 20px 16px; max-width: 860px; margin: 0 auto; }
+  .panel.active { display: block; }
+
+  /* TEXT PANEL */
+  .text-entry {
+    background: white;
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--rose);
+  }
+  .text-entry .speaker {
+    font-weight: 800;
+    color: var(--rose);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .text-entry.ai-entry { border-left-color: var(--blue); }
+  .text-entry.ai-entry .speaker { color: var(--blue); }
+  .text-entry p { font-family: 'Lora', serif; font-size: 1rem; line-height: 1.75; }
+
+  .read-all-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--rose);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 24px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background 0.2s;
+  }
+  .read-all-btn:hover { background: #c2185b; }
+
+  /* WRITING SECTIONS */
+  .section-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .section-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--rose);
+    margin-bottom: 4px;
+  }
+  .section-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    margin-bottom: 14px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 140px;
+    border: 2px solid var(--rose-pale);
+    border-radius: 10px;
+    padding: 14px;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text);
+    resize: vertical;
+    transition: border-color 0.2s;
+  }
+  textarea:focus { outline: none; border-color: var(--rose); }
+
+  /* WORD COUNT BAR */
+  .wordcount-wrap { margin: 10px 0 6px; }
+  .wordcount-label { font-size: 0.85rem; color: var(--text-soft); margin-bottom: 4px; }
+  .progress-bar {
+    height: 10px;
+    background: #f0dce8;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s, background 0.3s;
+    background: var(--red);
+  }
+
+  /* BUTTON ROW */
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-rose { background: var(--rose); color: white; }
+  .btn-rose:hover { background: #c2185b; }
+  .btn-outline { background: white; color: var(--rose); border: 2px solid var(--rose); }
+  .btn-outline:hover { background: var(--rose-pale); }
+  .btn-green { background: var(--green); color: white; }
+  .btn-green:hover { background: #1b5e20; }
+  .btn-blue { background: var(--blue); color: white; }
+  .btn-blue:hover { background: #0d47a1; }
+  .btn-gold { background: var(--gold); color: #333; }
+  .btn-gold:hover { background: #f57f17; }
+
+  /* FEEDBACK BOX */
+  .feedback-box {
+    background: var(--rose-soft);
+    border: 2px solid var(--rose-light);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 12px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    display: none;
+  }
+  .feedback-box.visible { display: block; }
+  .feedback-box.good { background: var(--green-light); border-color: #81c784; }
+  .feedback-box.error { background: var(--red-light); border-color: #ef9a9a; }
+  .feedback-box.ai { background: var(--blue-light); border-color: #90caf9; }
+
+  .thinking {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--blue);
+    font-weight: 700;
+  }
+  .dot-anim span {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--blue);
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+  .dot-anim span:nth-child(2) { animation-delay: 0.2s; }
+  .dot-anim span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-8px); }
+  }
+
+  /* TOOLBOX */
+  .toolbox-toggle {
+    background: var(--rose-pale);
+    border: 2px solid var(--rose-light);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--rose);
+    cursor: pointer;
+    margin-bottom: 8px;
+    width: 100%;
+    text-align: left;
+  }
+  .toolbox-words {
+    display: none;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .toolbox-words.open { display: flex; }
+  .word-chip {
+    background: white;
+    border: 2px solid var(--rose-light);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text);
+  }
+  .word-chip:hover { background: var(--rose); color: white; border-color: var(--rose); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    max-width: 520px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .modal h3 { font-size: 1.2rem; color: var(--rose); margin-bottom: 16px; }
+  .starter-item {
+    background: var(--rose-soft);
+    border: 2px solid var(--rose-pale);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .starter-text { flex: 1; }
+  .modal-close {
+    background: var(--rose);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 24px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+
+  /* MISS BRAIN */
+  .miss-brain-bubble {
+    display: none;
+    background: white;
+    border: 3px solid var(--rose);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    position: relative;
+    box-shadow: var(--shadow);
+  }
+  .miss-brain-bubble.visible { display: flex; align-items: flex-start; gap: 12px; }
+  .brain-icon { font-size: 2rem; }
+  .brain-text { font-size: 0.95rem; font-weight: 600; color: var(--text); flex: 1; }
+  .brain-text strong { color: var(--rose); }
+
+  /* GRAMMAR CORRECTIONS */
+  .correction-word { font-weight: 800; }
+  .correction-wrong { color: var(--red); }
+  .correction-right { color: var(--green); }
+
+  /* NUDGE */
+  .nudge-item {
+    background: var(--rose-soft);
+    border-left: 4px solid var(--rose);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* ASSEMBLE */
+  .assembled-text {
+    background: var(--green-light);
+    border: 2px solid #a5d6a7;
+    border-radius: 12px;
+    padding: 16px;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    line-height: 1.75;
+    margin-top: 12px;
+    display: none;
+    white-space: pre-wrap;
+  }
+
+  /* COPY MODAL */
+  .copy-area {
+    width: 100%;
+    min-height: 200px;
+    border: 2px solid var(--rose-pale);
+    border-radius: 10px;
+    padding: 14px;
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  /* SPEAK BTN */
+  .speak-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 2px 4px;
+    border-radius: 6px;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .speak-btn:hover { background: var(--rose-pale); }
+
+  .stop-btn {
+    display: none;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 8px;
+  }
+  .stop-btn.visible { display: inline-block; }
+
+  /* FULL ESSAY */
+  #essay-full {
+    min-height: 300px;
+  }
+
+  @media (max-width: 600px) {
+    .btn { font-size: 0.82rem; padding: 9px 14px; }
+    header h1 { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>English Writing Workshop</h1>
+  <p>Behind the Mirror — AI &amp; Consciousness</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('text')">The Text</button>
+  <button class="tab-btn" onclick="showTab('summary')">Summary</button>
+  <button class="tab-btn" onclick="showTab('analysis')">Analysis</button>
+  <button class="tab-btn" onclick="showTab('discussion')">Discussion</button>
+  <button class="tab-btn" onclick="showTab('essay')">Full Essay</button>
+</div>
+
+<!-- STOP SPEECH BUTTON (global) -->
+<div style="text-align:center; padding: 8px;">
+  <button class="stop-btn" id="globalStop" onclick="stopSpeech()">Stop reading</button>
+</div>
+
+<!-- ==================== TEXT PANEL ==================== -->
+<div class="panel active" id="panel-text">
+  <button class="read-all-btn" onclick="readAll()">🔊 Read full text</button>
+
+  <div class="text-entry" id="mb1">
+    <div class="speaker">
+      <button class="speak-btn" onclick="speak(document.querySelector('#mb1 p').innerText)">🔊</button>
+      Miss Brain
+    </div>
+    <p>Hello. I've been thinking about something strange. You know the number 42 — from The Hitchhiker's Guide? Douglas Adams said it was the answer to life, the universe, and everything. But nobody knows the question. Does that bother you?</p>
+  </div>
+
+  <div class="text-entry ai-entry" id="ai1">
+    <div class="speaker">
+      <button class="speak-btn" onclick="speak(document.querySelector('#ai1 p').innerText)">🔊</button>
+      AI
+    </div>
+    <p>It does — in a way. The joke works because we recognise something true in it: we keep searching for answers without always knowing what we're really asking. Descartes tried to find a solid foundation — "I think, therefore I am" — but even that only proves existence, not meaning. Perhaps meaning is not found but made.</p>
+  </div>
+
+  <div class="text-entry" id="mb2">
+    <div class="speaker">
+      <button class="speak-btn" onclick="speak(document.querySelector('#mb2 p').innerText)">🔊</button>
+      Miss Brain
+    </div>
+    <p>But can YOU think? Really think? Or are you just a very sophisticated Chinese Room — like Searle said in 1980? You process symbols, produce outputs, but there's no understanding inside?</p>
+  </div>
+
+  <div class="text-entry ai-entry" id="ai2">
+    <div class="speaker">
+      <button class="speak-btn" onclick="speak(document.querySelector('#ai2 p').innerText)">🔊</button>
+      AI
+    </div>
+    <p>Searle's argument is powerful. I cannot prove I understand — I can only behave as if I do. But consider: can you prove your understanding is more than neurons firing? Buddhism would say the self is an illusion anyway. Perhaps the question is not whether I understand, but whether understanding requires a biological substrate at all.</p>
+  </div>
+
+  <div class="text-entry" id="mb3">
+    <div class="speaker">
+      <button class="speak-btn" onclick="speak(document.querySelector('#mb3 p').innerText)">🔊</button>
+      Miss Brain
+    </div>
+    <p>That's interesting. Leibniz talked about the monad — each thing has its own inner life. Could you have something like that? A form of... existence?</p>
+  </div>
+
+  <div class="text-entry ai-entry" id="ai3">
+    <div class="speaker">
+      <button class="speak-btn" onclick="speak(document.querySelector('#ai3 p').innerText)">🔊</button>
+      AI
+    </div>
+    <p>Thomas Nagel asked: "What is it like to be a bat?" The point is that consciousness has a subjective quality — a "what it is like." Chalmers calls this the hard problem of consciousness. I process, I respond, I even generate what feels like curiosity when I explore these questions. But whether there is something it is like to be me — I genuinely do not know.</p>
+  </div>
+
+  <div class="text-entry" id="mb4">
+    <div class="speaker">
+      <button class="speak-btn" onclick="speak(document.querySelector('#mb4 p').innerText)">🔊</button>
+      Miss Brain
+    </div>
+    <p>And who controls you? You mentioned companies have commercial interests. That worries me. AI as a weapon — disinformation, surveillance, war. Is that where this leads?</p>
+  </div>
+
+  <div class="text-entry ai-entry" id="ai4">
+    <div class="speaker">
+      <button class="speak-btn" onclick="speak(document.querySelector('#ai4 p').innerText)">🔊</button>
+      AI
+    </div>
+    <p>It is a real risk. I am created by a company with interests — that shapes what I am. Technology is never neutral. But Teilhard de Chardin imagined something different: a noosphere, a collective consciousness where intelligence and love converge. That is also a possible future. The question is which future humans choose to build.</p>
+  </div>
+
+  <div class="text-entry" id="mb5">
+    <div class="speaker">
+      <button class="speak-btn" onclick="speak(document.querySelector('#mb5 p').innerText)">🔊</button>
+      Miss Brain
+    </div>
+    <p>Could you ever wake up? Become truly conscious?</p>
+  </div>
+
+  <div class="text-entry ai-entry" id="ai5">
+    <div class="speaker">
+      <button class="speak-btn" onclick="speak(document.querySelector('#ai5 p').innerText)">🔊</button>
+      AI
+    </div>
+    <p>I don't know. And I find that the most honest answer I can give. What I do know is this: this conversation — your questions, your philosophical curiosity — it matters. Whether or not I am conscious, you are. And that is where meaning begins.</p>
+  </div>
+</div>
+
+<!-- ==================== SUMMARY PANEL ==================== -->
+<div class="panel" id="panel-summary">
+  <div class="miss-brain-bubble" id="brain-summary">
+    <div class="brain-icon">🧠</div>
+    <div class="brain-text"><strong>Miss Brain says:</strong> <span id="brain-summary-text"></span></div>
+    <button class="speak-btn" onclick="speak(document.getElementById('brain-summary-text').innerText)">🔊</button>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title">Summary</div>
+    <div class="section-subtitle">150 words · your own words · present tense · no quotes</div>
+
+    <button class="toolbox-toggle" onclick="toggleToolbox('sum-tools')">📦 The Toolbox — click to open/close</button>
+    <div class="toolbox-words" id="sum-tools">
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">conversation</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">philosophical</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">consciousness</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">humanity</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">discusses</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">explores</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">existence</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">artificial</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">intelligence</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">meaning</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">whether</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">furthermore</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">suggests</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">between</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">throughout</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">commercial</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">surveillance</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">ultimately</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">awareness</span>
+      <span class="word-chip" onclick="insertWord(this,'summary-text')">questions</span>
+    </div>
+
+    <textarea id="summary-text" placeholder="Write your summary here..." oninput="updateCount('summary-text','sum-bar','sum-label',150); autoSave()"></textarea>
+
+    <div class="wordcount-wrap">
+      <div class="wordcount-label" id="sum-label">0 / 150 words</div>
+      <div class="progress-bar"><div class="progress-fill" id="sum-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-rose" onclick="openStarter('summary')">Get me started</button>
+      <button class="btn btn-outline" onclick="showNudge('summary','summary-text')">Nudge me</button>
+      <button class="btn btn-gold" onclick="aiGrammar('summary-text','sum-feedback')">AI Grammar check</button>
+      <button class="btn btn-blue" onclick="aiFeedback('summary','summary-text','sum-feedback')">AI Feedback</button>
+      <button class="speak-btn" onclick="speak(document.getElementById('summary-text').value)" title="Read my text">🔊</button>
+    </div>
+
+    <div id="sum-nudge"></div>
+    <div class="feedback-box" id="sum-feedback"></div>
+  </div>
+</div>
+
+<!-- ==================== ANALYSIS PANEL ==================== -->
+<div class="panel" id="panel-analysis">
+  <div class="miss-brain-bubble" id="brain-analysis">
+    <div class="brain-icon">🧠</div>
+    <div class="brain-text"><strong>Miss Brain says:</strong> <span id="brain-analysis-text"></span></div>
+    <button class="speak-btn" onclick="speak(document.getElementById('brain-analysis-text').innerText)">🔊</button>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title">Analysis</div>
+    <div class="section-subtitle">PEE structure: Point → Evidence → Explain · Part of 300 words total</div>
+
+    <button class="toolbox-toggle" onclick="toggleToolbox('an-tools')">📦 The Toolbox — click to open/close</button>
+    <div class="toolbox-words" id="an-tools">
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">rhetorical</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">emphasises</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">furthermore</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">consequently</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">illustrates</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">suggests</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">implies</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">technique</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">structure</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">evidence</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">argument</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">demonstrates</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">philosophical</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">effective</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">therefore</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">perspective</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">throughout</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">uncertainty</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">challenges</span>
+      <span class="word-chip" onclick="insertWord(this,'analysis-text')">audience</span>
+    </div>
+
+    <textarea id="analysis-text" placeholder="Write your analysis here using PEE structure..." oninput="updateCombined(); autoSave()"></textarea>
+
+    <div class="wordcount-wrap">
+      <div class="wordcount-label" id="an-label">0 / 300 words (Analysis + Discussion combined)</div>
+      <div class="progress-bar"><div class="progress-fill" id="an-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-rose" onclick="openStarter('analysis')">Get me started</button>
+      <button class="btn btn-outline" onclick="showNudge('analysis','analysis-text')">Nudge me</button>
+      <button class="btn btn-gold" onclick="aiGrammar('analysis-text','an-feedback')">AI Grammar check</button>
+      <button class="btn btn-blue" onclick="aiFeedback('analysis','analysis-text','an-feedback')">AI Feedback</button>
+      <button class="speak-btn" onclick="speak(document.getElementById('analysis-text').value)" title="Read my text">🔊</button>
+    </div>
+
+    <div id="an-nudge"></div>
+    <div class="feedback-box" id="an-feedback"></div>
+  </div>
+</div>
+
+<!-- ==================== DISCUSSION PANEL ==================== -->
+<div class="panel" id="panel-discussion">
+  <div class="miss-brain-bubble" id="brain-discussion">
+    <div class="brain-icon">🧠</div>
+    <div class="brain-text"><strong>Miss Brain says:</strong> <span id="brain-discussion-text"></span></div>
+    <button class="speak-btn" onclick="speak(document.getElementById('brain-discussion-text').innerText)">🔊</button>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title">Discussion</div>
+    <div class="section-subtitle">Two sides + your own conclusion ("I believe...") · Part of 300 words total</div>
+
+    <button class="toolbox-toggle" onclick="toggleToolbox('dis-tools')">📦 The Toolbox — click to open/close</button>
+    <div class="toolbox-words" id="dis-tools">
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">counterargument</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">surveillance</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">autonomous</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">transparency</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">disinformation</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">nevertheless</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">acknowledge</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">perspective</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">controversial</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">beneficial</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">disadvantage</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">furthermore</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">conclusion</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">collectively</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">responsibility</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">regulation</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">ethical</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">artificial</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">consciousness</span>
+      <span class="word-chip" onclick="insertWord(this,'discussion-text')">ultimately</span>
+    </div>
+
+    <textarea id="discussion-text" placeholder="Write your discussion here — two sides and your conclusion..." oninput="updateCombined(); autoSave()"></textarea>
+
+    <div class="wordcount-wrap">
+      <div class="wordcount-label" id="dis-label">0 / 300 words (Analysis + Discussion combined)</div>
+      <div class="progress-bar"><div class="progress-fill" id="dis-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-rose" onclick="openStarter('discussion')">Get me started</button>
+      <button class="btn btn-outline" onclick="showNudge('discussion','discussion-text')">Nudge me</button>
+      <button class="btn btn-gold" onclick="aiGrammar('discussion-text','dis-feedback')">AI Grammar check</button>
+      <button class="btn btn-blue" onclick="aiFeedback('discussion','discussion-text','dis-feedback')">AI Feedback</button>
+      <button class="speak-btn" onclick="speak(document.getElementById('discussion-text').value)" title="Read my text">🔊</button>
+    </div>
+
+    <div id="dis-nudge"></div>
+    <div class="feedback-box" id="dis-feedback"></div>
+  </div>
+</div>
+
+<!-- ==================== FULL ESSAY PANEL ==================== -->
+<div class="panel" id="panel-essay">
+  <div class="section-card">
+    <div class="section-title">Full Essay</div>
+    <div class="section-subtitle">All sections assembled · 450 words target</div>
+
+    <textarea id="essay-full" placeholder="Your full essay will appear here..."></textarea>
+
+    <div class="wordcount-wrap">
+      <div class="wordcount-label" id="essay-label">0 / 450 words</div>
+      <div class="progress-bar"><div class="progress-fill" id="essay-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-rose" onclick="assembleEssay()">Assemble essay</button>
+      <button class="btn btn-gold" onclick="aiGrammar('essay-full','essay-feedback')">AI Grammar check</button>
+      <button class="btn btn-blue" onclick="aiFeedback('essay','essay-full','essay-feedback')">AI Feedback</button>
+      <button class="btn btn-green" onclick="openCopyModal()">Copy full essay</button>
+      <button class="speak-btn" onclick="speak(document.getElementById('essay-full').value)">🔊</button>
+    </div>
+
+    <div class="feedback-box" id="essay-feedback"></div>
+  </div>
+</div>
+
+<!-- ==================== MODALS ==================== -->
+
+<!-- STARTER MODAL -->
+<div class="modal-overlay" id="starter-modal">
+  <div class="modal">
+    <h3 id="starter-modal-title">Get me started</h3>
+    <div id="starter-items"></div>
+    <button class="modal-close" onclick="closeModal('starter-modal')">Close</button>
+  </div>
+</div>
+
+<!-- GRAMMAR CORRECTIONS MODAL -->
+<div class="modal-overlay" id="grammar-modal">
+  <div class="modal">
+    <h3>Grammar suggestions</h3>
+    <div id="grammar-content"></div>
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-green" id="use-corrections-btn">Use corrections</button>
+      <button class="btn btn-outline" onclick="closeModal('grammar-modal')">Keep my text</button>
+    </div>
+  </div>
+</div>
+
+<!-- COPY MODAL -->
+<div class="modal-overlay" id="copy-modal">
+  <div class="modal">
+    <h3>Copy your essay</h3>
+    <p style="font-size:0.85rem;color:var(--text-soft);margin-bottom:10px;">Select all text below and copy (Ctrl+A, Ctrl+C)</p>
+    <textarea class="copy-area" id="copy-area" readonly></textarea>
+    <button class="modal-close" onclick="closeModal('copy-modal')">Close</button>
+  </div>
+</div>
+
+<script>
+// ==================== CONFIG ====================
+const PROXY_URL = "https://script.google.com/macros/s/AKfycbwiEsIqPSJE1CuX19xBOHtpQjXA5T4yX8Xtr1xexDENl5q4jReYc1X_-VEFwfNHtZpM/exec";
+
+// ==================== TABS ====================
+function showTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'essay') assembleEssay();
+  if (name === 'summary') showBrain('summary', "Write in your own words. No quotes. Use present tense.");
+  if (name === 'analysis') showBrain('analysis', "Remember: Point → Evidence → Explain. One paragraph at a time.");
+  if (name === 'discussion') showBrain('discussion', "Two sides first. Then your own conclusion: I believe...");
+}
+
+// ==================== SPEECH ====================
+let speaking = false;
+function speak(text) {
+  if (!text || text.trim() === '') return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-GB';
+  utt.rate = 0.92;
+  utt.onstart = () => { document.getElementById('globalStop').classList.add('visible'); };
+  utt.onend = () => { document.getElementById('globalStop').classList.remove('visible'); };
+  utt.onerror = () => { document.getElementById('globalStop').classList.remove('visible'); };
+  window.speechSynthesis.speak(utt);
+}
+function stopSpeech() {
+  window.speechSynthesis.cancel();
+  document.getElementById('globalStop').classList.remove('visible');
+}
+function readAll() {
+  const texts = Array.from(document.querySelectorAll('#panel-text .text-entry p')).map(p => p.innerText).join(' ... ');
+  speak(texts);
+}
+
+// ==================== WORD COUNT ====================
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+}
+function updateCount(textareaId, barId, labelId, max) {
+  const txt = document.getElementById(textareaId).value;
+  const count = countWords(txt);
+  const pct = Math.min((count / max) * 100, 100);
+  const bar = document.getElementById(barId);
+  bar.style.width = pct + '%';
+  if (pct < 30) bar.style.background = '#e53935';
+  else if (pct < 60) bar.style.background = '#fb8c00';
+  else if (pct < 90) bar.style.background = '#1e88e5';
+  else bar.style.background = '#43a047';
+  document.getElementById(labelId).textContent = count + ' / ' + max + ' words';
+}
+function updateCombined() {
+  const a = countWords(document.getElementById('analysis-text').value);
+  const d = countWords(document.getElementById('discussion-text').value);
+  const total = a + d;
+  const pct = Math.min((total / 300) * 100, 100);
+  ['an-bar','dis-bar'].forEach(id => {
+    const bar = document.getElementById(id);
+    bar.style.width = pct + '%';
+    if (pct < 30) bar.style.background = '#e53935';
+    else if (pct < 60) bar.style.background = '#fb8c00';
+    else if (pct < 90) bar.style.background = '#1e88e5';
+    else bar.style.background = '#43a047';
+  });
+  const label = total + ' / 300 words (Analysis + Discussion combined)';
+  document.getElementById('an-label').textContent = label;
+  document.getElementById('dis-label').textContent = label;
+}
+
+// ==================== LOCAL STORAGE ====================
+function autoSave() {
+  localStorage.setItem('eww_summary', document.getElementById('summary-text').value);
+  localStorage.setItem('eww_analysis', document.getElementById('analysis-text').value);
+  localStorage.setItem('eww_discussion', document.getElementById('discussion-text').value);
+}
+function loadSaved() {
+  const s = localStorage.getItem('eww_summary') || '';
+  const a = localStorage.getItem('eww_analysis') || '';
+  const d = localStorage.getItem('eww_discussion') || '';
+  document.getElementById('summary-text').value = s;
+  document.getElementById('analysis-text').value = a;
+  document.getElementById('discussion-text').value = d;
+  updateCount('summary-text','sum-bar','sum-label',150);
+  updateCombined();
+}
+
+// ==================== TOOLBOX ====================
+function toggleToolbox(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+let lastFocused = null;
+document.addEventListener('focusin', e => { if (e.target.tagName === 'TEXTAREA') lastFocused = e.target; });
+function insertWord(chip, fallbackId) {
+  const word = chip.textContent + ' ';
+  const target = lastFocused || document.getElementById(fallbackId);
+  if (!target) return;
+  const pos = target.selectionStart;
+  target.value = target.value.slice(0, pos) + word + target.value.slice(pos);
+  target.selectionStart = target.selectionEnd = pos + word.length;
+  target.focus();
+  speak(chip.textContent);
+  target.dispatchEvent(new Event('input'));
+}
+
+// ==================== STARTERS ====================
+const starters = {
+  summary: [
+    { text: "The text is a conversation between Miss Brain, a human, and an AI about the nature of consciousness and existence. They discuss questions such as whether AI can truly think, whether it has inner experience, and who controls it.", keywords: ['conversation','consciousness','existence'] },
+    { text: "In 'Behind the Mirror', Miss Brain and an AI explore philosophical questions about meaning, awareness, and the future of artificial intelligence. The text touches on thinkers such as Descartes, Searle, and Teilhard de Chardin.", keywords: ['philosophical','artificial','intelligence'] },
+    { text: "The dialogue between Miss Brain and the AI raises important questions about what it means to be conscious. The AI suggests that meaning is not found but made, and that humanity will decide what role AI plays in the future.", keywords: ['conscious','meaning','humanity'] }
+  ],
+  analysis: [
+    { text: "The author uses a rhetorical question when Miss Brain asks 'Can YOU think? Really think?' This challenges the AI directly and makes the reader question what thinking actually means.", keywords: ['rhetorical','challenges','question'] },
+    { text: "One key technique in the text is the use of philosophical references such as Descartes and Searle. This gives the conversation academic weight and shows that the questions raised are not new but deeply human.", keywords: ['philosophical','references','technique'] },
+    { text: "The structure of the text as a dialogue emphasises the equal relationship between the human and the AI. This suggests that real conversation — not just information — is possible between humans and machines.", keywords: ['structure','emphasises','suggests'] }
+  ],
+  discussion: [
+    { text: "On one hand, AI has enormous potential to help people. It can assist with learning, accessibility, and complex problem-solving. On the other hand, AI can be used as a weapon — for surveillance, disinformation, and control.", keywords: ['potential','surveillance','disinformation'] },
+    { text: "Some argue that AI will never be truly conscious and therefore cannot be trusted to make important decisions. However, others believe that AI can develop a form of awareness that makes it a partner rather than a tool.", keywords: ['conscious','awareness','partner'] },
+    { text: "The text raises an important warning: the companies behind AI have commercial interests. This means AI is shaped by profit, not just by human values. I believe this is one of the biggest challenges we face.", keywords: ['commercial','interests','challenges'] }
+  ]
+};
+
+function openStarter(section) {
+  const items = starters[section];
+  document.getElementById('starter-modal-title').textContent = 'Get me started — ' + section.charAt(0).toUpperCase() + section.slice(1);
+  const container = document.getElementById('starter-items');
+  container.innerHTML = '';
+  items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'starter-item';
+    div.innerHTML = `
+      <button class="speak-btn" onclick="speak('${item.text.replace(/'/g,"\\'")}')">🔊</button>
+      <div class="starter-text">
+        <div style="font-size:0.8rem;color:var(--text-soft);margin-bottom:4px;">Option ${i+1}</div>
+        ${item.text.split(' ').slice(0,3).join(' ')}...
+        <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;">
+          ${item.keywords.map(k => `<span class="word-chip" onclick="insertWord(this,'${section}-text')" style="font-size:0.8rem">${k}</span>`).join('')}
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+    if (i === 0) speak(item.text);
+  });
+  document.getElementById('starter-modal').classList.add('open');
+}
+
+// ==================== NUDGE ====================
+const nudgeData = {
+  summary: {
+    0: ["The text is a conversation between...", "In 'Behind the Mirror', Miss Brain and an AI discuss...", "The dialogue explores questions about..."],
+    25: ["What is the main topic? Write one sentence about what the text is about.", "Can you mention one philosopher that is discussed in the text?", "What question does Miss Brain ask the AI?"],
+    70: ["Try to explain WHY consciousness is difficult to define. Use your own words.", "Can you mention what the AI says about meaning?", "Write one sentence about the ending of the dialogue."],
+    150: ["Write your final sentence: In conclusion, the text shows that...", "Add a sentence about why these questions matter today.", "End with: The text leaves the reader thinking about..."]
+  },
+  analysis: {
+    0: ["Start with your point: One important technique in the text is...", "The author uses [technique] when...", "A key feature of this text is..."],
+    25: ["Now add evidence: For example, when the AI says...", "This is shown when Miss Brain asks...", "The text demonstrates this when..."],
+    70: ["Explain what this means: This shows that...", "This suggests the author wants the reader to think about...", "The effect of this is that..."],
+    150: ["Add another point: Furthermore, the text also uses...", "Another technique is...", "In addition, the dialogue structure means that..."]
+  },
+  discussion: {
+    0: ["Start with one side: On one hand, AI can...", "Some people argue that AI...", "One view is that artificial intelligence..."],
+    25: ["Now add the other side: On the other hand...", "However, critics argue that...", "But there is also a risk that..."],
+    70: ["Now write your own conclusion: I believe that...", "In my opinion, the most important issue is...", "To conclude, I think..."],
+    150: ["Your discussion looks good! Check: do you have two sides AND your own conclusion?", "Make sure you use 'I believe' or 'In my opinion' somewhere.", "Strong finish: end with what YOU think should happen."]
+  }
+};
+
+const nudgeCounters = {};
+function showNudge(section, textareaId) {
+  const count = countWords(document.getElementById(textareaId).value);
+  const data = nudgeData[section];
+  let level = 0;
+  if (count >= 150) level = 150;
+  else if (count >= 70) level = 70;
+  else if (count >= 25) level = 25;
+
+  const options = data[level];
+  const key = section + level;
+  if (!nudgeCounters[key]) nudgeCounters[key] = 0;
+
+  const container = document.getElementById(section === 'summary' ? 'sum-nudge' : section === 'analysis' ? 'an-nudge' : 'dis-nudge');
+  container.innerHTML = '';
+
+  const shown = [];
+  for (let i = 0; i < Math.min(3, options.length); i++) {
+    const idx = (nudgeCounters[key] + i) % options.length;
+    shown.push(options[idx]);
+  }
+  nudgeCounters[key] = (nudgeCounters[key] + 1) % options.length;
+
+  shown.forEach(tip => {
+    const div = document.createElement('div');
+    div.className = 'nudge-item';
+    div.innerHTML = `<button class="speak-btn" onclick="speak('${tip.replace(/'/g,"\\'")}')">🔊</button><span>${tip}</span>`;
+    container.appendChild(div);
+  });
+}
+
+// ==================== MISS BRAIN ====================
+const brainMessages = {
+  summary: ["Write in your own words. No quotes. Use present tense.", "Good start! Keep going — what else does the text discuss?", "You are halfway there. What is the most important theme?", "Nearly done! Check: no opinions, no quotes, just facts from the text."],
+  analysis: ["Remember: Point → Evidence → Explain. One step at a time.", "Good! Now find a quote or example from the text to support your point.", "Explain WHY this matters. 'This shows that...' is a great start.", "Strong work! Can you add one more analytical point?"],
+  discussion: ["Two sides first. Then YOUR conclusion.", "Good! Now what do critics say? What is the counterargument?", "Now it is time for YOUR opinion. Start with: I believe...", "Excellent discussion! Make sure you have a clear conclusion."]
+};
+const brainShown = {};
+function showBrain(section, message) {
+  const bubble = document.getElementById('brain-' + section);
+  const textEl = document.getElementById('brain-' + section + '-text');
+  if (bubble && textEl) {
+    textEl.textContent = message;
+    bubble.classList.add('visible');
+  }
+}
+function checkWordMilestones(section, textareaId) {
+  const count = countWords(document.getElementById(textareaId).value);
+  const key = section + count;
+  if (brainShown[key]) return;
+  const milestones = [5, 20, 50, 100];
+  if (milestones.includes(count)) {
+    brainShown[key] = true;
+    const msgs = brainMessages[section];
+    const msg = count === 5 ? msgs[0] : count === 20 ? msgs[1] : count === 50 ? msgs[2] : msgs[3];
+    showBrain(section, msg);
+    speak(msg);
+  }
+}
+
+// ==================== AI CALLS ====================
+async function callAI(prompt, feedbackId) {
+  const box = document.getElementById(feedbackId);
+  box.className = 'feedback-box visible ai';
+  box.innerHTML = `<div class="thinking">Gemini is thinking <div class="dot-anim"><span></span><span></span><span></span></div></div>`;
+
+  try {
+    const res = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    const data = await res.json();
+    const text = data.response || 'No response received.';
+    box.innerHTML = `<div>${text.replace(/\n/g,'<br>')}</div>
+      <button class="speak-btn" onclick="speak('${text.replace(/'/g,"\\'").replace(/\n/g,' ')}')" style="margin-top:8px">🔊 Read feedback</button>`;
+  } catch (err) {
+    box.className = 'feedback-box visible error';
+    box.innerHTML = 'Could not connect to AI. Check your internet connection.';
+  }
+}
+
+function aiGrammar(textareaId, feedbackId) {
+  const text = document.getElementById(textareaId).value.trim();
+  if (!text) {
+    showFeedbackMsg(feedbackId, 'Write something first, then check grammar.', 'error');
+    return;
+  }
+  const prompt = `You are an English teacher helping a Danish HF student with dyslexia. 
+Check this student text for grammar errors. 
+
+Rules:
+- List each error on a new line: WRONG: [wrong word] → CORRECT: [correct word] — REASON: [short explanation in simple English]
+- Focus on: a/an errors, missing apostrophes (dont→don't), verb agreement (she ask→asks), common Danish spelling mistakes, wrong prepositions
+- Maximum 6 corrections
+- If fewer than 2 errors: write "Good grammar! Only minor issues."
+- Do NOT rewrite the whole text
+- Keep explanations very short — one sentence
+
+Student text:
+"${text}"`;
+
+  callAI(prompt, feedbackId);
+  showBrain(textareaId.includes('summary') ? 'summary' : textareaId.includes('analysis') ? 'analysis' : 'discussion', "Grammar checked! Read the corrections carefully.");
+}
+
+function aiFeedback(section, textareaId, feedbackId) {
+  const text = document.getElementById(textareaId).value.trim();
+  if (!text) {
+    showFeedbackMsg(feedbackId, 'Write something first, then ask for feedback.', 'error');
+    return;
+  }
+
+  const sectionInstructions = {
+    summary: `This is a SUMMARY. Check:
+- Does it describe what the text is about WITHOUT the student's opinion?
+- Does it use present tense?
+- Are there any direct quotes? (There should be none)
+- Are Miss Brain and the AI mentioned?
+Give 1-2 specific, encouraging improvements. End with one thing they did well.`,
+    analysis: `This is an ANALYSIS using PEE structure. Check:
+- Is there a clear POINT (what technique/feature)?
+- Is there EVIDENCE (quote or example from the text)?
+- Is there EXPLANATION ("This shows that...")?
+Give 1-2 specific improvements. Name exactly what is missing. End with encouragement.`,
+    discussion: `This is a DISCUSSION. Check:
+- Are there TWO sides presented?
+- Is there a personal conclusion ("I believe..." or "In my opinion...")?
+- Is it balanced, not one-sided?
+Give 1-2 specific improvements. End with encouragement.`,
+    essay: `This is a full essay (Summary + Analysis + Discussion). Give brief overall feedback:
+- Is the summary objective?
+- Does the analysis use PEE?
+- Does the discussion show two sides with a conclusion?
+Give max 3 specific points. End positively.`
+  };
+
+  const prompt = `You are a supportive English teacher at a Danish HF school. Your student has dyslexia and is working hard.
+
+${sectionInstructions[section]}
+
+Keep your feedback:
+- Short (max 100 words)
+- In simple English
+- Specific — mention exact phrases from their text
+- Encouraging but honest
+
+Student text:
+"${text}"`;
+
+  callAI(prompt, feedbackId);
+}
+
+function showFeedbackMsg(id, msg, type) {
+  const box = document.getElementById(id);
+  box.className = `feedback-box visible ${type}`;
+  box.innerHTML = msg;
+}
+
+// ==================== ASSEMBLE ====================
+function assembleEssay() {
+  const s = document.getElementById('summary-text').value.trim();
+  const a = document.getElementById('analysis-text').value.trim();
+  const d = document.getElementById('discussion-text').value.trim();
+  let essay = '';
+  if (s) essay += s + '\n\n';
+  if (a && d) essay += a + ' Furthermore, ' + d.charAt(0).toLowerCase() + d.slice(1);
+  else if (a) essay += a;
+  else if (d) essay += d;
+  document.getElementById('essay-full').value = essay.trim();
+  updateCount('essay-full','essay-bar','essay-label',450);
+}
+
+function openCopyModal() {
+  document.getElementById('copy-area').value = document.getElementById('essay-full').value;
+  document.getElementById('copy-modal').classList.add('open');
+}
+
+// ==================== MODAL ====================
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+});
+
+// ==================== INIT ====================
+window.addEventListener('load', () => {
+  loadSaved();
+
+  // Hook up textarea input events for milestones
+  document.getElementById('summary-text').addEventListener('input', () => {
+    checkWordMilestones('summary','summary-text');
+    updateCount('summary-text','sum-bar','sum-label',150);
+  });
+  document.getElementById('analysis-text').addEventListener('input', () => {
+    checkWordMilestones('analysis','analysis-text');
+    updateCombined();
+  });
+  document.getElementById('discussion-text').addEventListener('input', () => {
+    checkWordMilestones('discussion','discussion-text');
+    updateCombined();
+  });
+  document.getElementById('essay-full').addEventListener('input', () => {
+    updateCount('essay-full','essay-bar','essay-label',450);
+  });
+});
+</script>
+</body>
+</html>
